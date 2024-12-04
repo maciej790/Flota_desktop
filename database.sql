@@ -1,20 +1,25 @@
 -- Tworzenie bazy danych flota
-CREATE DATABASE flota;
+CREATE DATABASE flota
+WITH
+ENCODING 'WIN1250'
+LC_COLLATE 'Polish_Poland.1250'
+LC_CTYPE 'Polish_Poland.1250'
+TEMPLATE template0;
 
 -- Użycie bazy danych
 \c flota;
 
--- Tabela Osoby
-CREATE TABLE "Osoby"
+-- Tabela osoby
+CREATE TABLE "osoby"
 (
-  "Id_osoby" BigSerial NOT NULL,
-  "Imię" Character varying NOT NULL,
-  "Nazwisko" Character varying NOT NULL,
-  "pesel" Integer NOT NULL,
+  "id_osoby" BigSerial NOT NULL,
+  "imie" Character varying NOT NULL,
+  "nazwisko" Character varying NOT NULL,
+  "pesel" Character varying NOT NULL,
   "rola" Character varying NOT NULL,
-  "Login" Character varying,
-  "Haslo" Character varying,
-  PRIMARY KEY ("Id_osoby"),
+  "login" Character varying,
+  "haslo" Character varying,
+  PRIMARY KEY ("id_osoby"),
   UNIQUE ("pesel")
 )
 WITH (
@@ -24,79 +29,82 @@ WITH (
 -- Tabela pojazdy
 CREATE TABLE "pojazdy"
 (
-  "Id_pojazdu" BigSerial NOT NULL,
-  "Marka" Character varying NOT NULL,
-  "Model" Character varying NOT NULL,
-  "Dane_serwisowe" Character varying,
-  "Naped" Character varying NOT NULL,
-  "Paliwo" Integer,
+  "id_pojazdu" BigSerial NOT NULL,
+  "marka" Character varying NOT NULL,
+  "model" Character varying NOT NULL,
+  "dane_serwisowe" Character varying,
+  "naped" Character varying NOT NULL,
+  "paliwo" Integer,
   "status" Character varying NOT NULL,
-  "Data_przegladu" Date NOT NULL,
-  "Przebieg" Character varying,
-  PRIMARY KEY ("Id_pojazdu"),
-  UNIQUE ("Id_pojazdu")
+  "data_przegladu" Date NOT NULL,
+  "przebieg" Character varying,
+  PRIMARY KEY ("id_pojazdu"),
+  UNIQUE ("id_pojazdu")
 )
 WITH (
   autovacuum_enabled = true
 );
 
--- Tabela wypożyczenia
-CREATE TABLE "wypożyczenia"
+-- Tabela wypozyczenia
+CREATE TABLE "wypozyczenia"
 (
-  "Id_wypozyczenia" BigSerial NOT NULL,
-  "Id_osoby" Bigint NOT NULL,
-  "Id_pojazdu" Bigint NOT NULL,
-  "Data_poczatek" Date NOT NULL,
-  "Data_koniec" Date NOT NULL,
-  PRIMARY KEY ("Id_wypozyczenia", "Id_osoby", "Id_pojazdu")
+  "id_wypozyczenia" BigSerial NOT NULL,
+  "id_osoby" Bigint NOT NULL,
+  "id_pojazdu" Bigint NOT NULL,
+  "data_poczatek" Date NOT NULL,
+  "data_koniec" Date NOT NULL,
+  PRIMARY KEY ("id_wypozyczenia", "id_osoby", "id_pojazdu")
 )
 WITH (
   autovacuum_enabled = true
 );
 
--- Tabela Zapytania
-CREATE TABLE "Zapytania"
+-- Tabela zapytania
+CREATE TABLE "zapytania"
 (
-  "Id_zapytania" BigSerial NOT NULL,
-  "Id_osoby" Bigint NOT NULL,
-  "Id_pojazdu" Bigint NOT NULL,
-  "Data_poczatek" Date,
-  "Data_koniec" Date,
-  "Uzasadnienie" Character varying,
-  "Decyzja" Boolean,
-  PRIMARY KEY ("Id_zapytania", "Id_osoby", "Id_pojazdu"),
-  UNIQUE ("Id_zapytania")
+  "id_zapytania" BigSerial NOT NULL,
+  "id_osoby" Bigint NOT NULL,
+  "id_pojazdu" Bigint NOT NULL,
+  "data_poczatek" Date,
+  "data_koniec" Date,
+  "uzasadnienie" Character varying,
+  "decyzja" Boolean,
+  PRIMARY KEY ("id_zapytania", "id_osoby", "id_pojazdu"),
+  UNIQUE ("id_zapytania")
 )
 WITH (
   autovacuum_enabled = true
 );
 
--- Klucze obce dla wypożyczenia
-ALTER TABLE "wypożyczenia"
+-- Klucze obce dla wypozyczenia
+ALTER TABLE "wypozyczenia"
   ADD CONSTRAINT "Relationship1"
-    FOREIGN KEY ("Id_osoby")
-    REFERENCES "Osoby" ("Id_osoby")
+    FOREIGN KEY ("id_osoby")
+    REFERENCES "osoby" ("id_osoby")
       ON DELETE NO ACTION
       ON UPDATE NO ACTION;
 
-ALTER TABLE "wypożyczenia"
+ALTER TABLE "wypozyczenia"
   ADD CONSTRAINT "Relationship2"
-    FOREIGN KEY ("Id_pojazdu")
-    REFERENCES "pojazdy" ("Id_pojazdu")
+    FOREIGN KEY ("id_pojazdu")
+    REFERENCES "pojazdy" ("id_pojazdu")
       ON DELETE NO ACTION
       ON UPDATE NO ACTION;
 
--- Klucze obce dla Zapytania
-ALTER TABLE "Zapytania"
+-- Klucze obce dla zapytania
+ALTER TABLE "zapytania"
   ADD CONSTRAINT "Relationship3"
-    FOREIGN KEY ("Id_osoby")
-    REFERENCES "Osoby" ("Id_osoby")
+    FOREIGN KEY ("id_osoby")
+    REFERENCES "osoby" ("id_osoby")
       ON DELETE NO ACTION
       ON UPDATE NO ACTION;
 
-ALTER TABLE "Zapytania"
+ALTER TABLE "zapytania"
   ADD CONSTRAINT "Relationship4"
-    FOREIGN KEY ("Id_pojazdu")
-    REFERENCES "pojazdy" ("Id_pojazdu")
+    FOREIGN KEY ("id_pojazdu")
+    REFERENCES "pojazdy" ("id_pojazdu")
       ON DELETE NO ACTION
       ON UPDATE NO ACTION;
+
+
+
